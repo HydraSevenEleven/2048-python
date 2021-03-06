@@ -9,7 +9,7 @@ Based on the popular game [2048](https://github.com/gabrielecirulli/2048) by Gab
 
 To start the game, run:
     
-    $ python3 puzzle.py
+    $ python python2048/main.py
 
 
 Contributors:
