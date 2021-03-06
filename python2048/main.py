@@ -1,11 +1,8 @@
 from Controller import core
-from Views import tkinterView
-import settings as s
+from Views.Tkinter import tkinterView
 
 def main():
-    
-    c = core.Core(s)
-    print(c.init_game(3))
-    view = tkinterView.GameGrid(c,s)
+    c = core.Core(4)
+    view = tkinterView.GameGrid(c)
 
 main()
