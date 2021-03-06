@@ -1,14 +1,18 @@
 import random
-import settings
 import numpy as np
 
 class Core():
+
+    def __init__(self,settings):
+        self.settings = settings
+        print(self.settings)
 
     def init_game(self,n):
         #fill the nxn-matrix with 0s
         matrix = np.zeros((n*n), dtype=int).reshape(n,n)
         matrix = self.add_two(matrix)
         matrix = self.add_two(matrix)
+        print(matrix)
         return matrix
 
     def add_two(self,matrix):
@@ -56,9 +60,9 @@ class Core():
         col,row = np.array(matrix).shape
         new = np.zeros((col*row), dtype=int).reshape(col,row)
         done = False
-        for i in range(settings.GRID_LEN):
+        for i in range(self.settings.GRID_LEN):
             count = 0
-            for j in range(settings.GRID_LEN):
+            for j in range(self.settings.GRID_LEN):
                 if matrix[i][j] != 0:
                     new[i][count] = matrix[i][j]
                     if j != count:
@@ -67,8 +71,8 @@ class Core():
         return new, done
 
     def merge_matrix(self,matrix, done):
-        for i in range(settings.GRID_LEN):
-            for j in range(settings.GRID_LEN-1):
+        for i in range(self.settings.GRID_LEN):
+            for j in range(self.settings.GRID_LEN-1):
                 if matrix[i][j] == matrix[i][j+1] and matrix[i][j] != 0:
                     matrix[i][j] *= 2
                     matrix[i][j+1] = 0
