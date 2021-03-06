@@ -1,6 +1,5 @@
 {
     "size": 400,
-    "grid_len": 4,
     "grid_padding": 10,
     "background_color_game": "#92877d",
     "background_color_cell_empty": "#9e948a",

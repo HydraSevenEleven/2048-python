@@ -30,9 +30,10 @@ class GameGrid(Frame):
             self.settings["key_k"]:             self.core.shift_up, 
             self.settings["key_j"]:             self.core.shift_down
         }        
-        self.grid_cells = []
-        self.init_grid()
+        self.grid_cells = []        
         self.matrix = self.core.init_game()
+        self.num_rows, self.num_cols = np.array(self.matrix).shape
+        self.init_grid()
         self.history_matrixs = []
         self.update_grid_cells()
 
@@ -42,12 +43,12 @@ class GameGrid(Frame):
         background = Frame(self, bg=self.settings["background_color_game"], width=self.settings["size"], height=self.settings["size"])
         background.grid()
 
-        for i in range(self.settings["grid_len"]):
+        for i in range(self.num_rows):
             grid_row = []
-            for j in range(self.settings["grid_len"]):
+            for j in range(self.num_rows):
                 cell = Frame(background, bg=self.settings["background_color_cell_empty"],
-                             width=self.settings["size"] / self.settings["grid_len"],
-                             height=self.settings["size"] / self.settings["grid_len"])
+                             width=self.settings["size"] / self.num_rows,
+                             height=self.settings["size"] / self.num_rows)
                 cell.grid(row=i, column=j, padx=self.settings["grid_padding"],
                           pady=self.settings["grid_padding"])
                 t = Label(master=cell, text="",
@@ -59,8 +60,8 @@ class GameGrid(Frame):
             self.grid_cells.append(grid_row)
 
     def update_grid_cells(self):
-        for i in range(self.settings["grid_len"]):
-            for j in range(self.settings["grid_len"]):
+        for i in range(self.num_rows):
+            for j in range(self.num_rows):
                 new_number = self.matrix[i][j]
                 if new_number == 0:
                     self.grid_cells[i][j].configure(text="", bg=self.settings["background_color_cell_empty"])
@@ -88,7 +89,7 @@ class GameGrid(Frame):
                     self.grid_cells[1][2].configure(text="Lose!", bg=self.settings["background_color_cell_empty"])
 
     def gen():
-        return random.randint(0, self.settings["grid_len"] - 1)
+        return random.randint(0, self.num_rows - 1)
 
     def generate_next(self):
         index = (self.gen(), self.gen())
