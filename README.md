@@ -9,7 +9,11 @@ Based on the popular game [2048](https://github.com/gabrielecirulli/2048) by Gab
 
 To start the game, run:
     
-    $ python python2048/main.py
+    $ python Game2048/main.py
+
+TODO:
+    1. implement the Model
+    2. implement the setup
 
 
 Contributors:
