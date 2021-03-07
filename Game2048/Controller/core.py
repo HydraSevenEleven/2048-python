@@ -1,10 +1,54 @@
+import sys
+sys.path.append("../")
+
 import random
 import numpy as np
+import json
+from os import path
+from Game2048.settingsEnum import SettingsEnum
 
 class Core():
 
-    def __init__(self,grid_len):
-        self.grid_len = grid_len        
+    def __init__(self,grid_len, view):        
+        self.commands = {
+            SettingsEnum.KEY_UP.value:                self.shift_up, 
+            SettingsEnum.KEY_DOWN.value:              self.shift_down,
+            SettingsEnum.KEY_LEFT.value:              self.shift_left, 
+            SettingsEnum.KEY_RIGHT.value:             self.shift_right,
+            SettingsEnum.KEY_UP_ALT.value:            self.shift_up, 
+            SettingsEnum.KEY_DOWN_ALT.value:          self.shift_down,
+            SettingsEnum.KEY_LEFT_ALT.value:          self.shift_left, 
+            SettingsEnum.KEY_RIGHT_ALT.value:         self.shift_right,
+            SettingsEnum.KEY_H.value:                 self.shift_left, 
+            SettingsEnum.KEY_L.value:                 self.shift_right,
+            SettingsEnum.KEY_K.value:                 self.shift_up, 
+            SettingsEnum.KEY_J.value:                 self.shift_down
+        }
+        self.grid_len = grid_len  
+        self.view = view  
+        self.matrix = self.init_game()
+        
+        self.view.matrix = self.matrix
+        self.view.init_grid()  
+        self.view.update_grid_cells()
+        self.view.master.bind("<Key>", self.key_down)
+        self.view.mainloop() 
+
+    def key_down(self, event):
+        key = repr(event.char)        
+        if key in self.commands:
+            self.matrix, done = self.commands[repr(event.char)](self.matrix)
+            if done:                
+                # record last move
+                self.view.history_matrixs.append(self.matrix)
+                self.view.matrix = self.matrix
+                self.view.update_grid_cells()                
+                if self.game_state(self.matrix) == 'win':
+                    self.view.grid_cells[1][1].configure(text="You", bg=SettingsEnum.BACKGROUND_COLOR_CELL_EMPTY)
+                    self.view.grid_cells[1][2].configure(text="Win!", bg=SettingsEnum.BACKGROUND_COLOR_CELL_EMPTY)
+                if self.game_state(self.matrix) == 'lose':
+                    self.view.grid_cells[1][1].configure(text="You", bg=SettingsEnum.BACKGROUND_COLOR_CELL_EMPTY)
+                    self.view.grid_cells[1][2].configure(text="Lose!", bg=SettingsEnum.BACKGROUND_COLOR_CELL_EMPTY)
 
     def init_game(self):
         #fill the nxn-matrix with 0s
@@ -51,8 +95,8 @@ class Core():
         return 'lose'
 
     def flip_matrix(self,matrix):
-        new = np.flip(matrix,1)
-        return new
+        flipped_matrix = np.flip(matrix,1)
+        return flipped_matrix
 
     def put_non_zero_to_the_left(self,matrix):
         col,row = np.array(matrix).shape
@@ -78,7 +122,6 @@ class Core():
         return matrix, done
 
     def shift_left(self,matrix):
-        print("left")
         matrix, done = self.put_non_zero_to_the_left(matrix)
         matrix, done = self.merge_matrix(matrix, done)
         matrix = self.put_non_zero_to_the_left(matrix)[0]
@@ -88,14 +131,12 @@ class Core():
         return matrix, done
 
     def shift_up(self,matrix):
-        print("up")
         matrix = matrix.transpose()
         matrix, done = self.shift_left(matrix)
         matrix = matrix.transpose()
         return matrix, done
 
     def shift_down(self,matrix):
-        print("down")
         matrix = self.flip_matrix(matrix.transpose())
         matrix, done = self.shift_left(matrix)
         matrix = self.flip_matrix(matrix)
@@ -103,7 +144,6 @@ class Core():
         return matrix, done
 
     def shift_right(self,matrix):
-        print("right")
         matrix = self.flip_matrix(matrix)
         matrix, done = self.shift_left(matrix)
         matrix = self.flip_matrix(matrix)

@@ -1,6 +1,6 @@
 {
-    "size": 400,
-    "grid_padding": 10,
+    "size": "400",
+    "grid_padding": "10",
     "background_color_game": "#92877d",
     "background_color_cell_empty": "#9e948a",
     "background_color_dict": {
@@ -40,7 +40,7 @@
         "65536":    "#f9f6f2" 
     },
     "font": "Verdana 40 bold",
-
+    
     "key_up_alt": "'\\uf700'",
     "key_down_alt": "'\\uf701'",
     "key_left_alt": "'\\uf702'",
@@ -53,5 +53,5 @@
     "key_j": "'j'",
     "key_k": "'k'",
     "key_l": "'l'",
-    "key_h": "'h'"
+    "key_h": "'h'"  
 }
